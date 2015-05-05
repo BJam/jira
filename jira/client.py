@@ -2380,6 +2380,31 @@ class JIRA(object):
 
         return json_loads(r)
 
+    def swimlane_by_id(self, board_id, swimlane_id):
+        """
+        Return the information about a sprint.
+
+        :param board_id: the board retrieving swimlanes from
+        :param swimlane_id: the swimlane retieving
+        """
+        return self._get_json('swimlanes/%s/%s' % (board_id, swimlane_id),
+                              base=self.AGILE_BASE_URL)
+
+    def update_swimlane(self, board_id, swimlane_id, name=None, query=None, description=None):
+        payload = {}
+        if name:
+            payload['name'] = name
+        if query:
+            payload['query'] = query
+        if description:
+            payload['description'] = description
+        url = self._get_url('swimlanes/%s/%s' % (board_id, swimlane_id),
+                              base=self.AGILE_BASE_URL)
+        r = self._session.put(
+            url, data=json.dumps(payload))
+
+        return json_loads(r)
+
     def completed_issues(self, board_id, sprint_id):
         """
         Return the completed issues for ``board_id`` and ``sprint_id``.
